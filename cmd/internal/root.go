@@ -14,16 +14,16 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "one-page-static-site",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Render the template using the content of the Markdown file",
+	Long: `Render the Go template file injecting the rendered content of the
+Mardown file where the {{.Content}} variable has been placed and write the
+output to the indicated file.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Run: func(cmd *cobra.Command, args []string) {
+		// TODO: pull out variables from Viper and passed to the tool, like:
+		// viper.GetString("template")
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -38,14 +38,25 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
+	// Configuration file flag
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.one-page-static-site.yaml)")
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// Tool flags
+	rootCmd.Flags().StringP(
+		"template", "t", "src/layout.html",
+		`File path of the Go HTML template to use where to render the content.
+Can be absolute or relative to the directory where the command is executed.
+The path separator is used accordingly the used OS.
+`,
+	)
+	rootCmd.Flags().StringP(
+		"content", "c", "content/post.md",
+		"File path of the Markdown file which contains the content to render into the layout",
+	)
+	rootCmd.Flags().StringP(
+		"output", "o", "build/index.html",
+		"File path where the rendered HTML will be written",
+	)
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -66,7 +77,8 @@ func initConfig() {
 		viper.SetConfigName(".one-page-static-site")
 	}
 
-	viper.AutomaticEnv() // read in environment variables that match
+	viper.AutomaticEnv()              // read in environment variables that match
+	viper.BindPFlags(rootCmd.Flags()) // read from flags and or its defaults when no config file
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
