@@ -7,6 +7,8 @@ import (
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	onepagestaticsite "github.com/ifraixedes/one-page-static-site"
 )
 
 var cfgFile string
@@ -21,8 +23,12 @@ output to the indicated file.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: pull out variables from Viper and passed to the tool, like:
-		// viper.GetString("template")
+		if err := onepagestaticsite.Render(
+			viper.GetString("template"), viper.GetString("content"), viper.GetString("output"),
+		); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	},
 }
 
