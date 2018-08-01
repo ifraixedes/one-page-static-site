@@ -30,7 +30,7 @@ func Render(tplfp string, ctnfp string, outfp string) error {
 		return err
 	}
 
-	ctnf, err := os.Open(fpa)
+	ctnf, err := os.Open(fpa) // nolint: gosec
 	if err != nil {
 		return fmt.Errorf("Error opening the content file. %+v", err)
 	}

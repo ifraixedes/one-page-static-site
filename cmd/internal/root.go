@@ -11,15 +11,17 @@ import (
 	onepagestaticsite "github.com/ifraixedes/one-page-static-site"
 )
 
-var cfgFile string
+var cfgFile string // nolint: gochecknoglobals
 
 // rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
+var rootCmd = &cobra.Command{ // nolint: gochecknoglobals
 	Use:   "one-page-static-site",
 	Short: "Render the template using the content of the Markdown file",
 	Long: `Render the Go template file injecting the rendered content of the
 Mardown file where the {{.Content}} variable has been placed and write the
-output to the indicated file.`,
+output to the indicated file.
+NOTE all the input files are considering coming from a trusted source, if
+that isn't your case, then DO NOT USE this tool.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
@@ -41,11 +43,14 @@ func Execute() {
 	}
 }
 
+// nolint: gochecknoinits
 func init() {
 	cobra.OnInitialize(initConfig)
 
 	// Configuration file flag
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.one-page-static-site.yaml)")
+	rootCmd.PersistentFlags().StringVar(
+		&cfgFile, "config", "", "config file (default is $HOME/.one-page-static-site.yaml)",
+	)
 
 	// Tool flags
 	rootCmd.Flags().StringP(
@@ -83,9 +88,12 @@ func initConfig() {
 		viper.SetConfigName(".one-page-static-site")
 	}
 
-	viper.AutomaticEnv()              // read in environment variables that match
-	viper.BindPFlags(rootCmd.Flags()) // read from flags and or its defaults when no config file
+	viper.AutomaticEnv() // read in environment variables that match
 
+	// read from flags and or its defaults when no config file
+	if err := viper.BindPFlags(rootCmd.Flags()); err != nil {
+		fmt.Printf("Unexpected error by viper.BindPFlags: %+v\n", err)
+	}
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
