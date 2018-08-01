@@ -1,0 +1,23 @@
+language: go
+
+go:
+  - "1.x"
+
+before_install:
+  # setup some env vars
+  - GO_FILES=$(find . -iname '*.go' | grep -v /vendor/)  # All the .go files, excluding vendor/
+  - PKGS=$(go list ./... | grep -v /vendor/)             # All the import paths, excluding vendor/
+
+  - make go-tools-install
+
+  # Install goveralls, Go integration for Coveralls.io.
+  - go get -u github.com/mattn/goveralls
+
+install:
+  - dep ensure
+
+script:
+  - test -z $(gofmt -s -l $GO_FILES)  # Fail if a .go file hasn't been formatted with gofmt
+  - make lint
+  - go test -v -covermode=count -coverprofile=profile.cov $PKGS
+  - goveralls -coverprofile=profile.cov -service=travis-ci

@@ -11,6 +11,7 @@ import (
 )
 
 func TestRender(t *testing.T) {
+	// nolint: lll
 	const expOutput = `<html>
   <head>
     <title>Example</title>

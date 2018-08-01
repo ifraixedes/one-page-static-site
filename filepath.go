@@ -26,7 +26,7 @@ func resolveFilepath(fp string) (string, error) {
 		}
 
 		var dirp = filepath.Dir(fp)
-		fi, err = os.Lstat(dirp)
+		_, err = os.Lstat(dirp)
 		if err != nil {
 			if !os.IsNotExist(err) {
 				return "", fmt.Errorf("error reading the directory information: %+v", err)
