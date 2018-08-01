@@ -1,9 +1,7 @@
-# One Page Static Site
+# One Page Static Site  [![Coverage Status](https://coveralls.io/repos/github/ifraixedes/one-page-static-site/badge.svg?branch=master)](https://coveralls.io/github/ifraixedes/one-page-static-site?branch=master) [![Build Status](https://travis-ci.com/ifraixedes/one-page-static-site.svg?branch=master)](https://travis-ci.com/ifraixedes/one-page-static-site)
 
 Opinionated and simple tool to build one page static site with content written
 in markdown and Go templates.
-
-It's **currently** totally **work in progress**.
 
 ## Goal
 
