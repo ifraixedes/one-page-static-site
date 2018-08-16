@@ -8,7 +8,7 @@ before_install:
   - GO_FILES=$(find . -iname '*.go' | grep -v /vendor/)  # All the .go files, excluding vendor/
   - PKGS=$(go list ./... | grep -v /vendor/)             # All the import paths, excluding vendor/
 
-  - make go-tools-install
+  - make .go-tools-install-ci
 
   # Install goveralls, Go integration for Coveralls.io.
   - go get -u github.com/mattn/goveralls

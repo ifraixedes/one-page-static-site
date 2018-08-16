@@ -6,7 +6,19 @@ help:                                                    ## Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 .PHONY: go-tools-install
-go-tools-install: .gti-dep .gti-metalinter               ## Install Go tools.
+go-tools-install:                                        ## Install Go tools.
+	@make .gti-dep .gti-metalinter .gti-pegomock
+
+.PHONY: lint
+lint:                                                    ## Lint the code.
+	@gometalinter --vendor --enable-all --line-length=120 --warn-unmatched-nolint --exclude=vendor --exclude=mock_ --deadline=5m ./...
+
+.PHONY: gen-mocks
+gen-mocks:                                               ## Generate the mocks used by the tests
+	@go generate
+
+.PHONY: .go-tools-install-ci
+.go-tools-install-ci: .gti-dep .gti-metalinter
 
 .PHONY: .gti-dep
 .gti-dep:
@@ -22,6 +34,6 @@ go-tools-install: .gti-dep .gti-metalinter               ## Install Go tools.
 # https://github.com/alecthomas/gometalinter/issues/418
 	@gometalinter --install --update --force --debug
 
-.PHONY: lint
-lint:                                                    ## Lint the code.
-	@gometalinter --vendor --enable-all --line-length=120 --warn-unmatched-nolint --exclude=vendor --deadline=5m ./...
+.PHONY: .gti-gmock
+.gti-pegomock:
+	@go get github.com/petergtz/pegomock/...
