@@ -2,19 +2,20 @@
 DEP_VERSION := "0.5.0"
 
 .PHONY: help
-help:                                                    ## Show this help.
-	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
+help: ## Show this help
+	@echo "Execute one of this targets: "
+	@echo
+	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/:.*##/:##/' | column -t -s '##'
 
 .PHONY: go-tools-install
-go-tools-install:                                        ## Install Go tools.
-	@make .gti-dep .gti-metalinter .gti-pegomock
+go-tools-install: .gti-dep .gti-metalinter .gti-pegomock ## Install Go tools
 
 .PHONY: lint
-lint:                                                    ## Lint the code.
+lint: ## Lint the code
 	@gometalinter --vendor --enable-all --line-length=120 --warn-unmatched-nolint --exclude=vendor --exclude=mock_ --deadline=5m ./...
 
 .PHONY: gen-mocks
-gen-mocks:                                               ## Generate the mocks used by the tests
+gen-mocks: ## Generate the mocks used by the tests
 	@go generate
 
 .PHONY: .go-tools-install-ci
