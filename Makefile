@@ -8,7 +8,7 @@ help: ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/:.*##/:##/' | column -t -s '##'
 
 .PHONY: go-tools-install
-go-tools-install: .gti-dep .gti-metalinter .gti-pegomock ## Install Go tools
+go-tools-install: .gti-dep .gti-metalinter .gti-pegomock .gti-gox ## Install Go tools
 
 .PHONY: lint
 lint: ## Lint the code
@@ -17,6 +17,13 @@ lint: ## Lint the code
 .PHONY: gen-mocks
 gen-mocks: ## Generate the mocks used by the tests
 	@go generate
+
+.PHONY: build-bins
+build-bins: ## Build the binaries for linux, OSX, Windows and for the arch 386 and amd64
+	@mkdir -p build
+	@cd build && \
+		gox -osarch="windows/386 windows/amd64 linux/386 linux/amd64 darwin/386 darwin/amd64" \
+			-output "opss_{{.OS}}_{{.Arch}}" ../cmd
 
 .PHONY: .go-tools-install-ci
 .go-tools-install-ci: .gti-dep .gti-metalinter
@@ -38,3 +45,7 @@ gen-mocks: ## Generate the mocks used by the tests
 .PHONY: .gti-gmock
 .gti-pegomock:
 	@go get -u github.com/petergtz/pegomock/...
+
+.PHONY: .gti-gox
+.gti-gox:
+	@go get -u github.com/mitchellh/gox
