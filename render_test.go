@@ -5,9 +5,9 @@ import (
 	"os"
 	"testing"
 
-	onepagestaticsite "github.com/ifraixedes/one-page-static-site"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.fraixed.es/onepagestaticsite"
 )
 
 func TestRender(t *testing.T) {

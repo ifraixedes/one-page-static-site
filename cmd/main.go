@@ -1,6 +1,6 @@
-package main
+package main // import "go.fraixed.es/onepagestaticsite/cmd"
 
-import "github.com/ifraixedes/one-page-static-site/cmd/internal"
+import "go.fraixed.es/onepagestaticsite/cmd/internal"
 
 func main() {
 	internal.Execute()

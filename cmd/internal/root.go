@@ -1,4 +1,4 @@
-package internal
+package internal // import "go.fraixed.es/onepagestaticsite/cmd/internal"
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	onepagestaticsite "github.com/ifraixedes/one-page-static-site"
+	"go.fraixed.es/onepagestaticsite"
 )
 
 var cfgFile string // nolint: gochecknoglobals
