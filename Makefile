@@ -12,7 +12,7 @@ go-tools-install: .gti-dep .gti-metalinter .gti-pegomock .gti-gox ## Install Go 
 
 .PHONY: lint
 lint: ## Lint the code
-	@gometalinter --vendor --enable-all --line-length=120 --warn-unmatched-nolint --exclude=vendor --exclude=mock_ --deadline=5m ./...
+	@gometalinter --vendor --enable-all --line-length=120 --warn-unmatched-nolint --exclude=mock_ --deadline=5m ./...
 
 .PHONY: gen-mocks
 gen-mocks: ## Generate the mocks used by the tests
