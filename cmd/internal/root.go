@@ -1,4 +1,4 @@
-package internal // import "go.fraixed.es/onepagestaticsite/cmd/internal"
+package internal
 
 import (
 	"fmt"
