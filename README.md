@@ -2,6 +2,8 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/ifraixedes/one-page-static-site/badge.svg?branch=master)](https://coveralls.io/github/ifraixedes/one-page-static-site?branch=master)
 [![Build Status](https://travis-ci.com/ifraixedes/one-page-static-site.svg?branch=master)](https://travis-ci.com/ifraixedes/one-page-static-site)
+[![Go Report Card](https://goreportcard.com/badge/go.fraixed.es/onepagestaticsite)](https://goreportcard.com/report/go.fraixed.es/onepagestaticsite)
+[![GoDoc](https://godoc.org/go.fraixed.es/onepagestaticsite?status.svg)](https://godoc.org/go.fraixed.es/onepagestaticsite)
 
 Opinionated and simple tool to build one page static site with content written
 in markdown and Go templates.
