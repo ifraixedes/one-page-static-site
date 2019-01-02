@@ -23,7 +23,7 @@ build-bins: ## Build the binaries for linux, OSX, Windows and for the arch 386 a
 	@mkdir -p build
 	@cd build && \
 		gox -osarch="windows/386 windows/amd64 linux/386 linux/amd64 darwin/386 darwin/amd64" \
-			-output "opss_{{.OS}}_{{.Arch}}" ../cmd
+			-output "opss_{{.OS}}_{{.Arch}}" ../cmd/opss
 
 .PHONY: .go-tools-install-ci
 .go-tools-install-ci: .gti-dep .gti-metalinter
