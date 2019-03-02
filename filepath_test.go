@@ -52,6 +52,7 @@ func TestResolveFilepath_NotExists(t *testing.T) {
 
 func TestResolveFilepath_NoNormalFile(t *testing.T) {
 	var slk = fmt.Sprintf("one-page-static-site-test-%d", time.Now().UnixNano())
+	//nolint:errcheck
 	defer os.Remove(slk)
 
 	{
@@ -61,6 +62,7 @@ func TestResolveFilepath_NoNormalFile(t *testing.T) {
 		err = os.Symlink(fp.Name(), slk)
 		require.NoError(t, err)
 
+		//nolint:errcheck
 		defer os.Remove(fp.Name())
 	}
 
