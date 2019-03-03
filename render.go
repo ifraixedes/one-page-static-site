@@ -22,7 +22,7 @@ func Render(tplfp string, ctnfp string, outfp string) error {
 
 	tpl, err := template.ParseFiles(tplfp)
 	if err != nil {
-		return fmt.Errorf("Error parsing the templage: %+v", err)
+		return fmt.Errorf("error parsing the templage: %+v", err)
 	}
 
 	fpa, err := resolveFilepath(ctnfp)
@@ -32,7 +32,7 @@ func Render(tplfp string, ctnfp string, outfp string) error {
 
 	ctnf, err := os.Open(fpa) // nolint: gosec
 	if err != nil {
-		return fmt.Errorf("Error opening the content file. %+v", err)
+		return fmt.Errorf("error opening the content file. %+v", err)
 	}
 
 	ctn, err := contentToHTML(ctnf)
@@ -47,11 +47,11 @@ func Render(tplfp string, ctnfp string, outfp string) error {
 
 	outf, err := os.Create(outfp)
 	if err != nil {
-		return fmt.Errorf("Error creating the output file: %+v", err)
+		return fmt.Errorf("error creating the output file: %+v", err)
 	}
 
 	if err = tpl.Execute(outf, tplData{Content: ctn}); err != nil {
-		return fmt.Errorf("Error rendering the template: %+v", err)
+		return fmt.Errorf("error rendering the template: %+v", err)
 	}
 
 	return nil
