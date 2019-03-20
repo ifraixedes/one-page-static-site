@@ -30,6 +30,7 @@ before_install:
 
 script:
   - make ci
+  - if [ "$COVERAGE" = true ]; then goveralls -coverprofile=profile.cov -service=travis-ci; fi
 
 notifications:
   email: false
