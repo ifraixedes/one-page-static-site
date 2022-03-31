@@ -6,15 +6,23 @@ package onepagestaticsite
 import (
 	pegomock "github.com/petergtz/pegomock"
 	"reflect"
+	"time"
 )
 
 type MockReader struct {
 	fail func(message string, callerSkip ...int)
 }
 
-func NewMockReader() *MockReader {
-	return &MockReader{fail: pegomock.GlobalFailHandler}
+func NewMockReader(options ...pegomock.Option) *MockReader {
+	mock := &MockReader{}
+	for _, option := range options {
+		option.Apply(mock)
+	}
+	return mock
 }
+
+func (mock *MockReader) SetFailHandler(fh pegomock.FailHandler) { mock.fail = fh }
+func (mock *MockReader) FailHandler() pegomock.FailHandler      { return mock.fail }
 
 func (mock *MockReader) Read(_param0 []byte) (int, error) {
 	if mock == nil {
@@ -35,44 +43,63 @@ func (mock *MockReader) Read(_param0 []byte) (int, error) {
 	return ret0, ret1
 }
 
-func (mock *MockReader) VerifyWasCalledOnce() *VerifierReader {
-	return &VerifierReader{mock, pegomock.Times(1), nil}
+func (mock *MockReader) VerifyWasCalledOnce() *VerifierMockReader {
+	return &VerifierMockReader{
+		mock:                   mock,
+		invocationCountMatcher: pegomock.Times(1),
+	}
 }
 
-func (mock *MockReader) VerifyWasCalled(invocationCountMatcher pegomock.Matcher) *VerifierReader {
-	return &VerifierReader{mock, invocationCountMatcher, nil}
+func (mock *MockReader) VerifyWasCalled(invocationCountMatcher pegomock.InvocationCountMatcher) *VerifierMockReader {
+	return &VerifierMockReader{
+		mock:                   mock,
+		invocationCountMatcher: invocationCountMatcher,
+	}
 }
 
-func (mock *MockReader) VerifyWasCalledInOrder(invocationCountMatcher pegomock.Matcher, inOrderContext *pegomock.InOrderContext) *VerifierReader {
-	return &VerifierReader{mock, invocationCountMatcher, inOrderContext}
+func (mock *MockReader) VerifyWasCalledInOrder(invocationCountMatcher pegomock.InvocationCountMatcher, inOrderContext *pegomock.InOrderContext) *VerifierMockReader {
+	return &VerifierMockReader{
+		mock:                   mock,
+		invocationCountMatcher: invocationCountMatcher,
+		inOrderContext:         inOrderContext,
+	}
 }
 
-type VerifierReader struct {
+func (mock *MockReader) VerifyWasCalledEventually(invocationCountMatcher pegomock.InvocationCountMatcher, timeout time.Duration) *VerifierMockReader {
+	return &VerifierMockReader{
+		mock:                   mock,
+		invocationCountMatcher: invocationCountMatcher,
+		timeout:                timeout,
+	}
+}
+
+type VerifierMockReader struct {
 	mock                   *MockReader
-	invocationCountMatcher pegomock.Matcher
+	invocationCountMatcher pegomock.InvocationCountMatcher
 	inOrderContext         *pegomock.InOrderContext
+	timeout                time.Duration
 }
 
-func (verifier *VerifierReader) Read(_param0 []byte) *Reader_Read_OngoingVerification {
+func (verifier *VerifierMockReader) Read(_param0 []byte) *MockReader_Read_OngoingVerification {
 	params := []pegomock.Param{_param0}
-	methodInvocations := pegomock.GetGenericMockFrom(verifier.mock).Verify(verifier.inOrderContext, verifier.invocationCountMatcher, "Read", params)
-	return &Reader_Read_OngoingVerification{mock: verifier.mock, methodInvocations: methodInvocations}
+	methodInvocations := pegomock.GetGenericMockFrom(verifier.mock).Verify(verifier.inOrderContext, verifier.invocationCountMatcher, "Read", params, verifier.timeout)
+	return &MockReader_Read_OngoingVerification{mock: verifier.mock, methodInvocations: methodInvocations}
 }
 
-type Reader_Read_OngoingVerification struct {
+type MockReader_Read_OngoingVerification struct {
 	mock              *MockReader
 	methodInvocations []pegomock.MethodInvocation
 }
 
-func (c *Reader_Read_OngoingVerification) GetCapturedArguments() []byte {
+func (c *MockReader_Read_OngoingVerification) GetCapturedArguments() []byte {
 	_param0 := c.GetAllCapturedArguments()
 	return _param0[len(_param0)-1]
 }
 
-func (c *Reader_Read_OngoingVerification) GetAllCapturedArguments() (_param0 [][]byte) {
+func (c *MockReader_Read_OngoingVerification) GetAllCapturedArguments() (_param0 [][]byte) {
 	params := pegomock.GetGenericMockFrom(c.mock).GetInvocationParams(c.methodInvocations)
 	if len(params) > 0 {
-		_param0 = make([][]byte, len(params[0]))
+		_param0 = make([][]byte, len(c.methodInvocations))
 		for u, param := range params[0] {
 			_param0[u] = param.([]byte)
 		}
